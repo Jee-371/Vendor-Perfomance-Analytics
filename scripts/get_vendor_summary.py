@@ -27,8 +27,8 @@ def create_vendor_summary(conn):
         p.Brand,
         p.Description,
         p.PurchasePrice,
-        pp.Volume,              
-        pp.Price as ActualPrice,              
+        pp.Volume,          
+        pp.Price as ActualPrice,          
         SUM(p.Quantity) as TotalPurchaseQuantity,
         SUM(p.Dollars) as TotalPurchaseDollars
     FROM purchases p
@@ -73,24 +73,24 @@ def create_vendor_summary(conn):
 
     return vendor_sales_summary
 
-def clean_data(df):
+def clean_data(summary_df):
     # Changing volume datatype to float
-    vendor_sales_summary['Volume'] = vendor_sales_summary['Volume'].astype('float64')       
+    summary_df['Volume'] = summary_df['Volume'].astype('float64')     
     
     # Filling missing values with 0
-    vendor_sales_summary.fillna(0, inplace = True)
+    summary_df.fillna(0, inplace = True)
     
     # Removing spaces from categorical columns
-    vendor_sales_summary['VendorName'] = vendor_sales_summary['VendorName'].str.strip()
-    vendor_sales_summary['Description'] = vendor_sales_summary['Description'].str.strip()
+    summary_df['VendorName'] = summary_df['VendorName'].str.strip()
+    summary_df['Description'] = summary_df['Description'].str.strip()
     
     # Creating new columns for further analysis
-    vendor_sales_summary['GrossProfit'] = vendor_sales_summary['TotalSalesDollars'] - vendor_sales_summary['TotalPurchaseDollars']
-    vendor_sales_summary['ProfitMargin'] = (vendor_sales_summary['GrossProfit'] / vendor_sales_summary['TotalSalesDollars']) * 100
-    vendor_sales_summary['StockTurnover'] = vendor_sales_summary['TotalSalesQuantity'] / vendor_sales_summary['TotalPurchaseQuantity']
-    vendor_sales_summary['SalesToPurchaseRatio'] = vendor_sales_summary['TotalSalesDollars'] / vendor_sales_summary['TotalPurchaseDollars']     
+    summary_df['GrossProfit'] = summary_df['TotalSalesDollars'] - summary_df['TotalPurchaseDollars']
+    summary_df['ProfitMargin'] = (summary_df['GrossProfit'] / summary_df['TotalSalesDollars']) * 100
+    summary_df['StockTurnover'] = summary_df['TotalSalesQuantity'] / summary_df['TotalPurchaseQuantity']
+    summary_df['SalesToPurchaseRatio'] = summary_df['TotalSalesDollars'] / summary_df['TotalPurchaseDollars']    
 
-    return df
+    return summary_df # Changed from 'df' to 'summary_df'
 
 if __name__ == '__main__':
     conn = sqlite3.connect('inventory.db')
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     clean_df = clean_data(summary_df)
     logging.info(clean_df.head())
 
-    logging_info('Ingesting Data')
-    ingest_db(clean_df,'vendor_sales_summary', conn)
+    logging.info('Ingesting Data') # Corrected from logging_info
+    # Make sure 'db_ingestion' module and 'ingest_db' function are correctly implemented and accessible
+    ingest_db(clean_df,'vendor_sales_summary', conn) 
     logging.info('Ingestion Completed')
-
