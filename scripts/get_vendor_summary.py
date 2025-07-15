@@ -90,7 +90,7 @@ def clean_data(summary_df):
     summary_df['StockTurnover'] = summary_df['TotalSalesQuantity'] / summary_df['TotalPurchaseQuantity']
     summary_df['SalesToPurchaseRatio'] = summary_df['TotalSalesDollars'] / summary_df['TotalPurchaseDollars']    
 
-    return summary_df # Changed from 'df' to 'summary_df'
+    return summary_df
 
 if __name__ == '__main__':
     conn = sqlite3.connect('inventory.db')
